@@ -9,6 +9,7 @@ import requests
 import soundcloud
 import sys
 import urllib
+from dateutil.parser import parse as dateparse
 
 from clint.textui import colored, puts, progress
 from datetime import datetime
@@ -388,6 +389,7 @@ def download_tracks(client, tracks, num_tracks=sys.maxsize, downloadable=False, 
                 t_track['user'] = {'username': track.user['username']}
                 t_track['release_year'] = track.release
                 t_track['genre'] = track.genre
+                t_track['created_at'] = dateparse(track.created_at)
                 t_track['artwork_url'] = track.artwork_url
                 if track.downloadable:
                     t_track['stream_url'] = track.download_url
@@ -418,7 +420,7 @@ def download_tracks(client, tracks, num_tracks=sys.maxsize, downloadable=False, 
             else:
                 track_artist = sanitize_filename(track['user']['username'])
                 track_title = sanitize_filename(track['title'])
-                track_filename = track_artist + ' - ' + track_title + '.mp3'
+                track_filename = track["created_at"].strftime("%Y%m%d_%H%M_") + track_artist + ' - ' + track_title + '.mp3'
 
                 if folders:
                     track_artist_path = join(custom_path, track_artist)
