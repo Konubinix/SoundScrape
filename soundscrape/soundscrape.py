@@ -17,7 +17,7 @@ from mutagen.mp3 import MP3, EasyMP3
 from mutagen.id3 import APIC, WXXX
 from mutagen.id3 import ID3 as OldID3
 from subprocess import Popen, PIPE
-from os.path import dirname, exists, join
+from os.path import dirname, exists, join, islink
 from os import access, mkdir, W_OK
 
 ####################################################################
@@ -427,7 +427,7 @@ def download_tracks(client, tracks, num_tracks=sys.maxsize, downloadable=False, 
                 else:
                     track_filename = join(custom_path, track_filename)
 
-                if exists(track_filename):
+                if exists(track_filename) or islink(track_filename):
                     puts_safe(colored.yellow("Track already downloaded: ") + colored.white(track_title))
                     continue
 
